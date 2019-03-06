@@ -26,8 +26,11 @@
       <ion-item color="light">
         <ion-label position="stacked">Fabricante</ion-label>
         <ion-select [(ngModel)]="buscar_fabricante" (ionChange)="filtarModelosPorFabricanteSelecionado()" placeholder="Selecione" >
-          <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.id}}" selected="{{fabr.selecionado}}">
+          <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.id}}">
             {{fabr.fipe_name}}
+          </ion-select-option>
+          <ion-select-option *ngIf="lista_fabricantes.length == 1" value="{{lista_fabricantes[0].id}}" selected="true">
+            {{lista_fabricantes[0].nome}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_fabricantes.length}}</ion-badge>
@@ -44,14 +47,14 @@
       <ion-item color="light">
         <ion-label position="stacked">Ano Fabr./Modelo</ion-label>
         <ion-select [(ngModel)]="buscar_ano" (ionChange)="buscarValorPorModelo()" placeholder="Selecione">
-          <ion-select-option *ngFor="let ano of lista_modeloanos" value="{{ano.id}}">
+          <ion-select-option *ngFor="let ano of lista_modeloanos" value="{{ano.id}}" selected="{{ano.selecionado}}">
             {{ano.name}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_modeloanos.length}}</ion-badge>
       </ion-item>
       <ion-item  color="light">
-        <ion-label position="stacked">Valor FIPE</ion-label>
+        <ion-label position="stacked">{{descricao_fipe}}</ion-label>
         <ion-input type="text" [(ngModel)]="valor_fipe" readonly></ion-input>
       </ion-item>
       <ion-button expand="block" (click)="testar()">

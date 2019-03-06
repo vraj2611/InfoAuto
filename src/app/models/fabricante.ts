@@ -1,3 +1,5 @@
+import { ApiFipeService } from 'src/app/services/api-fipe.service';
+
 export class Fabricante {
 
     constructor(
@@ -5,6 +7,5 @@ export class Fabricante {
         public name: string,
         public fipe_name: string,
         public key: string
-    ) {}
-
+    ) { }
 }

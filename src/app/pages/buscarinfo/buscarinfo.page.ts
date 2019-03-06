@@ -22,6 +22,7 @@ export class BuscarinfoPage implements OnInit {
   public buscar_ano: String;
   public info_sinesp: String;
   public valor_fipe: String;
+  public descricao_fipe: String;
 
   constructor(
     public api_fipe: ApiFipeService,
@@ -32,6 +33,7 @@ export class BuscarinfoPage implements OnInit {
     this.listarFabricantes();
     this.info_sinesp = 'Informe uma placa para buscar';
     this.valor_fipe = '--';
+    this.descricao_fipe = 'Valor FIPE';
   }
 
   ngOnInit() { }
@@ -69,6 +71,7 @@ export class BuscarinfoPage implements OnInit {
 
   async buscarValorPorModelo(){
     let result = await this.api_fipe.getValorPorModeloAno(this.buscar_fabricante, this.buscar_modelo, this.buscar_ano);
+    this.descricao_fipe = `Valor FIPE (código: ${result['fipe_codigo']})`;
     this.valor_fipe = result['preco'];
   }
 
@@ -80,7 +83,7 @@ export class BuscarinfoPage implements OnInit {
       veiculo = await this.api_sinesp.consultarPlaca(this.buscar_placa);
       this.info_sinesp = `${veiculo.fabricante} ${veiculo.versao} ${veiculo.ano_mod} ${veiculo.cor}`.toUpperCase();
       this.lista_modelos = await this.filtrarVersoesDoVeiculo(veiculo);
-      this.lista_modeloanos = [{id: veiculo.ano_mod, name: veiculo.ano_mod}];
+      this.lista_modeloanos = [{id: `${veiculo.ano_mod}-1`, name: veiculo.ano_mod, selecionado: true}];
     } catch (error) {
       this.info_sinesp = error;
     }
@@ -90,7 +93,7 @@ export class BuscarinfoPage implements OnInit {
     for (let fabr of this.lista_fabricantes) {
       if (fabr['name'] == nome) {
         this.buscar_fabricante = fabr.id;
-        fabr.selecionado = true;
+        this.lista_fabricantes = [{ id: fabr['id'], nome: fabr['fipe_name'] }];
         return { id: fabr['id'], nome: fabr['fipe_name'] };
       }
     }
