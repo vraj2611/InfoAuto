@@ -16,8 +16,8 @@
     <ion-card-content>
         
       <ion-item color="light">
-        <ion-label position="floating">Placa</ion-label>
-        <ion-input type="text" maxlength="7" [(ngModel)]="buscar_placa" debounce="100" (ionChange)="tratarPlaca()"></ion-input>
+        <ion-label position="stacked">Placa</ion-label>
+        <ion-input type="text" maxlength="7" [(ngModel)]="buscar_placa" debounce="100" (ionChange)="tratarPlaca()" placeholder="Digite uma placa válida"></ion-input>
         </ion-item>
       <ion-item color="light">
           <ion-label position="stacked">Informação Sinesp</ion-label>
@@ -25,8 +25,8 @@
       </ion-item>
       <ion-item color="light">
         <ion-label position="stacked">Fabricante</ion-label>
-        <ion-select [(ngModel)]="buscar_fabricante" (onChange)="testar()" placeholder="Selecione" >
-          <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.fipe_name}}">
+        <ion-select [(ngModel)]="buscar_fabricante" (ionChange)="filtarModelosPorFabricanteSelecionado()" placeholder="Selecione" >
+          <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.id}}" selected="{{fabr.selecionado}}">
             {{fabr.fipe_name}}
           </ion-select-option>
         </ion-select>
@@ -34,7 +34,7 @@
       </ion-item>
       <ion-item color="light">
         <ion-label position="stacked">Modelo</ion-label>
-        <ion-select [(ngModel)]="buscar_modelo" placeholder="Selecione">
+        <ion-select [(ngModel)]="buscar_modelo" (ionChange)="filtarAnoPorModeloSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let mod of lista_modelos" value="{{mod.id}}">
             {{mod.name}}
           </ion-select-option>
@@ -43,30 +43,20 @@
       </ion-item>
       <ion-item color="light">
         <ion-label position="stacked">Ano Fabr./Modelo</ion-label>
-        <ion-select [(ngModel)]="buscar_ano" placeholder="Selecione">
+        <ion-select [(ngModel)]="buscar_ano" (ionChange)="buscarValorPorModelo()" placeholder="Selecione">
           <ion-select-option *ngFor="let ano of lista_modeloanos" value="{{ano.id}}">
             {{ano.name}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_modeloanos.length}}</ion-badge>
       </ion-item>
-      <ion-button expand="block" (click)="buscarModeloPorPlaca()">
-        <ion-icon name="add-circle"></ion-icon>
-        &nbsp;Adicionar a Lista
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card color="light">
-    <ion-card-header>
-      <ion-card-title>Valores</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-item>
-        <ion-label position="stacked">Valor atual em R$</ion-label>
-        <ion-input></ion-input>
+      <ion-item  color="light">
+        <ion-label position="stacked">Valor FIPE</ion-label>
+        <ion-input type="text" [(ngModel)]="valor_fipe" readonly></ion-input>
       </ion-item>
+      <ion-button expand="block" (click)="testar()">
+        <ion-icon name="add-circle"></ion-icon>&nbsp;Adicionar a Lista
+      </ion-button>
     </ion-card-content>
   </ion-card>
 

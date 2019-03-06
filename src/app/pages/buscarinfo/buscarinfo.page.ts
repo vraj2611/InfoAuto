@@ -17,10 +17,11 @@ export class BuscarinfoPage implements OnInit {
   public veiculo: Veiculo;
   
   public buscar_placa: String;
-  public buscar_fabricante: String;
-  public buscar_modelo: String;
+  public buscar_fabricante: Number;
+  public buscar_modelo: Number;
   public buscar_ano: String;
   public info_sinesp: String;
+  public valor_fipe: String;
 
   constructor(
     public api_fipe: ApiFipeService,
@@ -30,13 +31,13 @@ export class BuscarinfoPage implements OnInit {
     this.lista_modeloanos = [];
     this.listarFabricantes();
     this.info_sinesp = 'Informe uma placa para buscar';
-
+    this.valor_fipe = '--';
   }
 
   ngOnInit() { }
 
   testar(){
-    alert(this.buscar_fabricante);
+    alert(this.buscar_fabricante + " _ " + this.buscar_modelo);
   }
 
   tratarPlaca(){
@@ -46,7 +47,6 @@ export class BuscarinfoPage implements OnInit {
   }
 
   async filtrarVersoesDoVeiculo(veiculo: Veiculo) {
-
     let fabr = this.selecionarFabricanteporNome(veiculo.fabricante);
     let versoes_fabr: any = await this.api_fipe.getModelosPorFabricante(fabr.id);
     let versoes_modelo: any = versoes_fabr.filter((versao) => {
@@ -55,6 +55,21 @@ export class BuscarinfoPage implements OnInit {
       return teste_modelo;
     });
     return versoes_modelo;
+  }
+
+  async filtarModelosPorFabricanteSelecionado(){
+    if ( !this.buscar_placa || this.buscar_placa.length == 0){
+      this.lista_modelos = await this.api_fipe.getModelosPorFabricante(this.buscar_fabricante);
+    }
+  }
+
+  async filtarAnoPorModeloSelecionado(){
+    this.lista_modeloanos = await this.api_fipe.getModelosAnosPorModelo(this.buscar_fabricante, this.buscar_modelo);
+  }
+
+  async buscarValorPorModelo(){
+    let result = await this.api_fipe.getValorPorModeloAno(this.buscar_fabricante, this.buscar_modelo, this.buscar_ano);
+    this.valor_fipe = result['preco'];
   }
 
   async buscarModeloPorPlaca() {
@@ -72,8 +87,10 @@ export class BuscarinfoPage implements OnInit {
   }
 
   selecionarFabricanteporNome(nome) {
-    for (const fabr of this.lista_fabricantes) {
+    for (let fabr of this.lista_fabricantes) {
       if (fabr['name'] == nome) {
+        this.buscar_fabricante = fabr.id;
+        fabr.selecionado = true;
         return { id: fabr['id'], nome: fabr['fipe_name'] };
       }
     }
@@ -84,6 +101,10 @@ export class BuscarinfoPage implements OnInit {
     if (this.lista_fabricantes.length < 1) {
       this.lista_fabricantes = await this.api_fipe.getFabricantes();
     }
+    this.lista_fabricantes.forEach((fab)=>{
+      fab.selecionado = false;
+    });
+    this.lista_fabricantes[0].selecionado = true;
     if (this.lista_fabricantes.length < 1) alert('Nenhum Fabricante disponível');
   }
 
