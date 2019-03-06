@@ -14,52 +14,67 @@
     </ion-card-header>
 
     <ion-card-content>
-        
+
       <ion-item color="light">
         <ion-label position="stacked">Placa</ion-label>
-        <ion-input type="text" maxlength="7" [(ngModel)]="buscar_placa" debounce="100" (ionChange)="tratarPlaca()" placeholder="Digite uma placa válida"></ion-input>
-        </ion-item>
-      <ion-item color="light">
-          <ion-label position="stacked">Informação Sinesp</ion-label>
-          <ion-input type="text" [(ngModel)]="info_sinesp" disabled></ion-input>
+        <ion-input type="text" maxlength="7" [(ngModel)]="buscar_placa" debounce="100" (ionChange)="tratarPlaca()"
+          placeholder="Digite uma placa válida"></ion-input>
       </ion-item>
-      <ion-item color="light">
+      
+      <ion-item color="light" *ngIf="isPlacaOk">
+        <ion-label position="stacked">Informação Sinesp</ion-label>
+        <ion-input type="text" [(ngModel)]="info_sinesp" disabled></ion-input>
+      </ion-item>
+      
+      <ion-item color="light" *ngIf="isPlacaOk">
         <ion-label position="stacked">Fabricante</ion-label>
-        <ion-select [(ngModel)]="buscar_fabricante" (ionChange)="filtarModelosPorFabricanteSelecionado()" placeholder="Selecione" >
+        <ion-input type="text" disabled>{{buscar_fabricante.nome}}</ion-input>
+      </ion-item>
+
+      <ion-item color="light" *ngIf="!isPlacaOk">
+        <ion-label position="stacked">Fabricante</ion-label>
+        <ion-select [(ngModel)]="buscar_fabricante" (ionChange)="posFabricanteSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.id}}">
             {{fabr.fipe_name}}
-          </ion-select-option>
-          <ion-select-option *ngIf="lista_fabricantes.length == 1" value="{{lista_fabricantes[0].id}}" selected="true">
-            {{lista_fabricantes[0].nome}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_fabricantes.length}}</ion-badge>
       </ion-item>
+      
       <ion-item color="light">
         <ion-label position="stacked">Modelo</ion-label>
-        <ion-select [(ngModel)]="buscar_modelo" (ionChange)="filtarAnoPorModeloSelecionado()" placeholder="Selecione">
+        <ion-select [(ngModel)]="buscar_modelo" (ionChange)="posModeloSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let mod of lista_modelos" value="{{mod.id}}">
             {{mod.name}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_modelos.length}}</ion-badge>
       </ion-item>
-      <ion-item color="light">
-        <ion-label position="stacked">Ano Fabr./Modelo</ion-label>
-        <ion-select [(ngModel)]="buscar_ano" (ionChange)="buscarValorPorModelo()" placeholder="Selecione">
+    
+      <ion-item color="light" *ngIf="buscar_placa.length == 7">
+        <ion-label position="stacked">Ano Modelo</ion-label>
+        <ion-input type="text" disabled>{{buscar_ano.nome}}</ion-input>
+      </ion-item>
+
+      <ion-item color="light" *ngIf="buscar_placa.length != 7">
+        <ion-label position="stacked">Ano Modelo</ion-label>
+        <ion-select [(ngModel)]="buscar_ano" (ionChange)="posAnoSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let ano of lista_modeloanos" value="{{ano.id}}" selected="{{ano.selecionado}}">
             {{ano.name}}
           </ion-select-option>
         </ion-select>
         <ion-badge slot="end">{{lista_modeloanos.length}}</ion-badge>
       </ion-item>
-      <ion-item  color="light">
+    
+      <ion-item color="light">
         <ion-label position="stacked">{{descricao_fipe}}</ion-label>
-        <ion-input type="text" [(ngModel)]="valor_fipe" readonly></ion-input>
+        <ion-input type="text" [(ngModel)]="valor_fipe" disabled></ion-input>
       </ion-item>
+      
       <ion-button expand="block" (click)="testar()">
         <ion-icon name="add-circle"></ion-icon>&nbsp;Adicionar a Lista
       </ion-button>
+    
     </ion-card-content>
   </ion-card>
 

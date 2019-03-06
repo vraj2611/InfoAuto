@@ -1,11 +1,11 @@
-import { ApiFipeService } from 'src/app/services/api-fipe.service';
-
 export class Fabricante {
 
+    public id: Number;
+    public name: String;
+    public fipe_name: String;
+    public key: String;
+
     constructor(
-        public id: number,
-        public name: string,
-        public fipe_name: string,
-        public key: string
-    ) { }
+    ){}
+
 }
