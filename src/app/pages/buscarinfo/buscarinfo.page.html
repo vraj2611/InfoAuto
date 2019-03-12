@@ -26,12 +26,19 @@
         <ion-input type="text" [(ngModel)]="info_sinesp" disabled></ion-input>
       </ion-item>
       
-      <ion-item color="light" *ngIf="isPlacaOk">
+      <!-- Fabricante -->
+      <ion-item color="light" *ngIf="isLoadingFabricantes">
+        <ion-label position="stacked">Fabricante</ion-label>
+        <ion-input type="text" readonly>Carregando...</ion-input>
+        <ion-badge slot="end">...</ion-badge>
+      </ion-item>
+
+      <ion-item color="light" *ngIf="!isLoadingFabricantes && isPlacaOk">
         <ion-label position="stacked">Fabricante</ion-label>
         <ion-input type="text" disabled>{{buscar_fabricante.nome}}</ion-input>
       </ion-item>
 
-      <ion-item color="light" *ngIf="!isPlacaOk">
+      <ion-item color="light" *ngIf="!isLoadingFabricantes && !isPlacaOk">
         <ion-label position="stacked">Fabricante</ion-label>
         <ion-select [(ngModel)]="buscar_fabricante" (ionChange)="posFabricanteSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let fabr of lista_fabricantes" value="{{fabr.id}}">
@@ -41,7 +48,14 @@
         <ion-badge slot="end">{{lista_fabricantes.length}}</ion-badge>
       </ion-item>
       
-      <ion-item color="light">
+      <!-- Modelo -->
+      <ion-item color="light" *ngIf="isLoadingModelos">
+        <ion-label position="stacked">Modelo</ion-label>
+        <ion-input type="text" readonly>Carregando...</ion-input>
+        <ion-badge slot="end">...</ion-badge>
+      </ion-item>
+
+      <ion-item color="light" *ngIf="!isLoadingModelos">
         <ion-label position="stacked">Modelo</ion-label>
         <ion-select [(ngModel)]="buscar_modelo" (ionChange)="posModeloSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let mod of lista_modelos" value="{{mod.id}}">
@@ -51,12 +65,21 @@
         <ion-badge slot="end">{{lista_modelos.length}}</ion-badge>
       </ion-item>
     
-      <ion-item color="light" *ngIf="buscar_placa.length == 7">
+
+      <!-- Ano -->
+
+      <ion-item color="light" *ngIf="isLoadingAnos">
+        <ion-label position="stacked">Ano Modelo</ion-label>
+        <ion-input type="text" disabled>Carregando...</ion-input>
+        <ion-badge slot="end">...</ion-badge>
+      </ion-item>
+
+      <ion-item color="light" *ngIf="!isLoadingAnos && buscar_placa.length == 7">
         <ion-label position="stacked">Ano Modelo</ion-label>
         <ion-input type="text" disabled>{{buscar_ano.nome}}</ion-input>
       </ion-item>
 
-      <ion-item color="light" *ngIf="buscar_placa.length != 7">
+      <ion-item color="light" *ngIf="!isLoadingAnos && buscar_placa.length != 7">
         <ion-label position="stacked">Ano Modelo</ion-label>
         <ion-select [(ngModel)]="buscar_ano" (ionChange)="posAnoSelecionado()" placeholder="Selecione">
           <ion-select-option *ngFor="let ano of lista_modeloanos" value="{{ano.id}}" selected="{{ano.selecionado}}">
@@ -66,12 +89,13 @@
         <ion-badge slot="end">{{lista_modeloanos.length}}</ion-badge>
       </ion-item>
     
+      <!-- Valor -->
       <ion-item color="light">
         <ion-label position="stacked">{{descricao_fipe}}</ion-label>
         <ion-input type="text" [(ngModel)]="valor_fipe" disabled></ion-input>
       </ion-item>
       
-      <ion-button expand="block" (click)="testar()">
+      <ion-button expand="block" (click)="testar()" disabled>
         <ion-icon name="add-circle"></ion-icon>&nbsp;Adicionar a Lista
       </ion-button>
     

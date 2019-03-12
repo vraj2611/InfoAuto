@@ -25,6 +25,10 @@ export class BuscarinfoPage implements OnInit {
   public valor_fipe: String;
   public descricao_fipe: String;
   public codigo_fipe: String;
+  
+  public isLoadingFabricantes: boolean;
+  public isLoadingModelos: boolean;
+  public isLoadingAnos: boolean;
 
   constructor(
     public api_fipe: ApiFipeService,
@@ -40,21 +44,30 @@ export class BuscarinfoPage implements OnInit {
     this.info_sinesp = '';
     this.valor_fipe = '--';
     this.descricao_fipe = 'Valor FIPE';
+
+    this.isLoadingFabricantes = false;
+    this.isLoadingModelos = false;
+    this.isLoadingAnos = false;
   }
 
   ngOnInit() { }
 
   async listarFabricantes() {
+    this.isLoadingFabricantes = true;
     this.lista_fabricantes = await this.api_fipe.getFabricantes();
+    this.isLoadingFabricantes = false;
   }
 
   async posFabricanteSelecionado() {
     if (!this.isPlacaOk) {
+      this.isLoadingModelos = true;
       this.lista_modelos = await this.api_fipe.getModelosPorFabricante(this.buscar_fabricante);
+      this.isLoadingModelos = false;
     }
   }
 
   async posModeloSelecionado() {
+    this.isLoadingAnos = true;
     if (!this.isPlacaOk) {
       this.lista_modeloanos = await this.api_fipe.getModelosAnosPorModelo(this.buscar_fabricante, this.buscar_modelo);
     } else {
@@ -65,10 +78,12 @@ export class BuscarinfoPage implements OnInit {
         } 
       }
     }
+    this.isLoadingAnos = false;
   }
 
   async posAnoSelecionado() {
     if (!this.isPlacaOk) {
+      this.valor_fipe = "Carregando...";
       let result = await this.api_fipe.getValorPorModeloAno(this.buscar_fabricante, this.buscar_modelo, this.buscar_ano);
       this.codigo_fipe = result['fipe_codigo'];
       this.valor_fipe = result['preco'];
@@ -90,12 +105,22 @@ export class BuscarinfoPage implements OnInit {
     let veiculo: Veiculo;
     try {
       this.info_sinesp = 'Buscando informação...';
-      this.buscar_fabricante = { nome: 'Carregando...' };
+      this.isLoadingFabricantes = true;
+      this.isLoadingModelos = true;
+      this.isLoadingAnos = true;
+      
       veiculo = await this.api_sinesp.consultarPlaca(this.buscar_placa);
-      this.info_sinesp = `${veiculo.fabricante} ${veiculo.versao} ${veiculo.ano_mod} ${veiculo.cor}`.toUpperCase();
+      
+      this.info_sinesp = `${veiculo.descricao} ${veiculo.ano_mod} ${veiculo.cor}`.toUpperCase();
+      
       this.buscar_fabricante = this.selecionarFabricanteporNome(veiculo.fabricante);
+      this.isLoadingFabricantes = false;
+
       this.buscar_ano = { id: `${veiculo.ano_mod}-1`, nome: veiculo.ano_mod };
+      this.isLoadingAnos = false;
+      
       this.lista_modelos = await this.filtrarVersoesDoVeiculo(veiculo);
+      this.isLoadingModelos = false;
     } catch (error) {
       this.info_sinesp = error;
       this.buscar_fabricante = {};
@@ -134,7 +159,5 @@ export class BuscarinfoPage implements OnInit {
     });
     return versoes_modeloano;
   }
-
-
 
 }

@@ -39,7 +39,9 @@ export class ApiSinespService {
       result['anoModelo'],
       'N/A',
       result['cor'],
-      result['situacao']
+      result['situacao'],
+      0,
+      result['modelo']
     );
         /*{
       "codigoRetorno":"0",

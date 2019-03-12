@@ -10,7 +10,8 @@ export class Veiculo {
         public motor:String = '',
         public cor:String = '',
         public situacao:String = '',
-        public valor:Number = 0
+        public valor:Number = 0,
+        public descricao:String
     ){}
 
 }
