@@ -1,3 +1,4 @@
+import { DatabaseService } from './services/database.service';
 import { Component } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
@@ -30,7 +31,8 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private dbService: DatabaseService
   ) {
     this.initializeApp();
   }
@@ -38,6 +40,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
+      
+      this.dbService.createDataBase();
+      
       this.splashScreen.hide();
     });
   }

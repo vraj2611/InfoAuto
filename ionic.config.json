@@ -1,5 +1,7 @@
 {
   "name": "InfoAuto",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
